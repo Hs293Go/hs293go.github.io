@@ -1,0 +1,20 @@
+.page__content {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+}
+
+pre, code {
+  font-family: $code-font-family;
+  font-size: 0.95em;
+  background-color: #171a1b;
+  border-radius: 4px;
+}
+
+pre {
+  padding: 1em;
+  overflow-x: auto;
+}
+
+.sidebar {
+  font-size: 0.95em;
+}

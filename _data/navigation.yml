@@ -1,0 +1,13 @@
+main:
+  - title: "About Me / CV"
+    children:
+      - title: "About Me"
+        url: /about/
+      - title: "Curriculum Vitae"
+        url: /cv/
+  - title: "Research"
+    url: /research/
+  - title: "Notes"
+    url: /notes/
+  - title: "All Posts"
+    url: /
