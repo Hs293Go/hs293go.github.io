@@ -7,6 +7,9 @@ main:
         url: /cv/
   - title: "Research"
     url: /research/
+    children:
+      - title: "Tutorial on Observability"
+        url: /observability_tutorial/
   - title: "Notes"
     url: /notes/
   - title: "All Posts"
