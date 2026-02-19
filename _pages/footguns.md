@@ -9,13 +9,37 @@ self.shoot(self.foot["left"])  # kaboom
 
 This page is a collection of footguns that I have encountered.
 
-# Python
+## C++
 
-## Easily confused software/package names
+### Ruining aggregate-ness by defining default constructors
 
-### [Rerun](https://rerun.io/)
+C++20 adopted
+[P1008R1](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p1008r1.pdf),
+which _prohibits aggregates with user-declared constructors_. Therefore,
+defaulting a constructor for a struct (which had been redundant but harmless
+pre-C++20), e.g.:
 
-The visualization framework's Python package is called `rerun-sdk`.
+```cpp
+struct MyStruct {
+  MyStruct() = default;  // This will cause MyStruct to lose its POD-ness
+  int x;
+  float y;
+};
+```
+
+will cause it to lose its aggregate-ness, and cause aggregate initialization to
+fail, e.g.:
+
+```cpp
+// Error: no matching constructor
+MyStruct s{1, 2.0f};
+
+// Also disqualifies the powerful designated initializer syntax
+MyStruct s{.x = 1, .y = 2.0f};
+```
+
+**Solution**: Simply do not define default constructors for structs that are
+meant to be aggregates.
 
 ## Python
 
