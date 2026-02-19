@@ -11,6 +11,88 @@ This page is a collection of footguns that I have encountered.
 
 ## C++
 
+### Reference aliases are undefined behaviors waiting to happen
+
+When writing numerical code with `Eigen`, it is tempting to use reference
+wrappers to give named aliases to segments of a larger array:
+
+```cpp
+struct State {
+  Eigen::Vector<double, 13> state;
+  Eigen::Ref<Eigen::Vector3d> position{state.segment<3>(0)};
+  Eigen::Ref<Eigen::Vector4d> quaternion_coefficients{state.segment<4>(3)};
+  Eigen::Ref<Eigen::Vector3d> velocity{state.segment<3>(7)};
+  Eigen::Ref<Eigen::Vector3d> angular_velocity{state.segment<3>(10)};
+};
+
+State state;
+
+state.position << 1.0, 2.0, 3.0;  // Elegant syntax, tempting!
+```
+
+This code is very likely to cause dangling references. When `State` is copied,
+the `state` member is copied and the **values** of the memory addresses
+underlying the `Eigen::Ref` members are also copied verbatim:
+
+- They are **NOT** updated to point into the new `state` member in the copied
+  struct, and
+- They will still point to the `state` member in the **original** struct!
+
+Once the original `State` struct goes out of scope, the reference members in the
+copied struct will dangle, and any access to them will cause undefined behavior.
+
+```
+  Original
+  ┌─────────────────────────┐
+  │ state: [.............]  │
+  │         │               │
+  │         position        │
+  └─────────────────────────┘
+
+  Original                       Copied
+  ┌─────────────────────────┐    ┌─────────────────────────┐
+  │ state: [.............]  │    │ state: [.............]  │
+  │         │               │    │                         │
+  │         └───────────────────────────── position        │
+  └─────────────────────────┘    └─────────────────────────┘
+
+  Original (destroyed)           Copied
+                                 ┌─────────────────────────┐
+           ???                   │ state: [.............]  │
+            │                    │                         │
+            └───────────────────────────── position        │
+                                 └─────────────────────────┘
+```
+
+A similar mode of failure can occur when the `State` struct is moved. The
+implicitly generated move constructor moves each member individually, including
+the **values** of the memory addresses underlying the `Eigen::Ref` members. As a
+result, the moved-to object’s references do not refer to its own `state` member,
+and will dangle once the moved-from object is destroyed.
+
+> Technically, the types we discuss here are self-referential types, and their
+> default copy and move operations do not preserve their internal aliasing
+> invariants.
+
+**Solution**: Do not use reference wrappers to give named aliases to a segment
+of a larger array. Instead, define member functions that return the desired
+segments:
+
+```cpp
+struct State {
+  Eigen::Vector<double, 13> state;
+
+  Eigen::Ref<Eigen::Vector3d> position() { return state.segment<3>(0); }
+  Eigen::Ref<Eigen::Vector4d> quaternion_coefficients() {
+    return state.segment<4>(3);
+  }
+  Eigen::Ref<Eigen::Vector3d> velocity() { return state.segment<3>(7); }
+  Eigen::Ref<Eigen::Vector3d> angular_velocity() {
+    return state.segment<3>(10);
+  }
+};
+```
+
 ### Ruining aggregate-ness by defining default constructors
 
 C++20 adopted
