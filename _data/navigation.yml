@@ -12,5 +12,8 @@ main:
         url: /observability_tutorial/
   - title: "Notes"
     url: /notes/
+    children:
+      - title: "Footguns"
+        url: /footguns/
   - title: "All Posts"
     url: /
