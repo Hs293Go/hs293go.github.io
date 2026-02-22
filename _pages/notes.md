@@ -42,3 +42,15 @@ docker run -it \
 
 As seen from `/root/.Xauthority`, this command only applies if the container is
 run as root; Running containers as non-root users is another can of worms...
+
+## Update alternatives
+
+The right way to install a new alternative for a command is to use the
+`update-alternatives --install` command. The role of the 4 confusingly
+isomorphic parameters is as follows:
+
+```bash
+#                                  Symlink         Name Actual path    Priority
+#                                  vvvvvvvvvvv     vvv  vvvvvvvvvvvvvv vvv
+sudo update-alternatives --install /usr/bin/g++-13 g++ /usr/bin/g++-13 100
+```
