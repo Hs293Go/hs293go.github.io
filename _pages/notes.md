@@ -7,6 +7,22 @@ For the moment being, this page will host some code snippets that I'm tired of
 searching for over and over again. I will try to keep it updated with the most
 useful ones.
 
+## Synonymous archive/backup files
+
+Brace expansion can be used to quickly create archive or backup files synonymous
+to the original file or directory.
+
+- Tar
+
+  ```bash
+  tar -czvf archive{.tar.gz,}
+  ```
+
+- Zip
+  ```bash
+  zip -r backup{.zip,}
+  ```
+
 ## Prevent building CMake tests/examples
 
 When invoking cmake on the command line with an appropriate shell, you can use
