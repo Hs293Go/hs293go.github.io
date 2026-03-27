@@ -200,10 +200,11 @@ result in messages not being received.
 
   ```python
   from rclpy.qos import DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy
+
   qos_profile = QoSProfile(
-      history = (HistoryPolicy.KEEP_LAST,)
+      history=HistoryPolicy.KEEP_LAST,
       depth=5,
-      reliability = (ReliabilityPolicy.BEST_EFFORT,)
+      reliability=ReliabilityPolicy.BEST_EFFORT,
       durability=DurabilityPolicy.VOLATILE,
   )
   ```
