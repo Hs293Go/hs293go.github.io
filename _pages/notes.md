@@ -70,3 +70,36 @@ isomorphic parameters is as follows:
 #                                  vvvvvvvvvvv     vvv  vvvvvvvvvvvvvv vvv
 sudo update-alternatives --install /usr/bin/g++-13 g++ /usr/bin/g++-13 100
 ```
+
+## Filtering out covariance data in ROS messages
+
+In ROS 2, `ros2 topic echo` prints all fields of a message, including covariance
+data in `geometry_msgs/PoseWithCovariance`, `nav_msgs/Odometry`, and other
+messages.
+
+The covariance data is printed as a 36-element array in yaml list format (i.e.,
+one element per line). This swamps the terminal and obscures the usually more
+interesting position and velocity fields.
+
+### Attempted solutions:
+
+- `--field`: This option only allows printing a single field, so it cannot be
+  used to print all fields except covariance.
+
+- `--filter`: This option only allows filtering messages based on field values,
+  not dropping portions of the message.
+
+### Actual solution:
+
+Use `yq` to delete the covariance field from the message before printing it. For
+example, to dropping covariances from the `pose` and `twist` fields
+`nav_msgs/Odometry` messages, run:
+
+```bash
+ros2 topic echo /my_topic | yq 'del(.pose.covariance) | del(.twist.covariance)'
+```
+
+> `yq` is easily available on Ubuntu. It depends on `jq`, which is available via
+> `sudo apt install jq`, and `yq` can be installed via `pipx install yq`; `pipx`
+> itself can be installed via `sudo apt install pipx` followed by
+> `pipx ensurepath`.
