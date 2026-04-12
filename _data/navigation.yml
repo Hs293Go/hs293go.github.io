@@ -8,6 +8,8 @@ main:
   - title: "Research"
     url: /research/
     children:
+      - title: "Quaternions: A common convention"
+        url: /quaternion_convention/
       - title: "Tutorial on Observability"
         url: /observability_tutorial/
   - title: "Notes"
