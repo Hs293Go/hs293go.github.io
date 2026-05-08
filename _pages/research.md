@@ -82,3 +82,22 @@ work was published at
 | ![CL simulation](../assets/images/multi_vehicle_gazebo.png) | ![optimized trajectories](../assets/images/uav_trajectories.png) | ![covariance improvement](../assets/images/state_estimation_performance_hl.png) |
 
 ## Observability-Aware Control
+
+The CL work left a few loose ends:
+
+- Evaluating EKF covariance recursively at every solver iteration is
+  expensive.[^2]
+
+- The metric itself only _indirectly_ captures what we really care about:
+  **whether the system's state is recoverable from its observations/how much do
+  observations contribute to precision improvement.**
+  - The EKF covariance is a _proxy_ for the true objective of maximizing the
+    system's _observability_.
+  - Covariance-based optimization results are heavily impacted by the choice of
+    noise parameters, which are often hand-tuned.
+
+[^2]:
+    Ironically, this forced me to learn about MATLAB's parallel computing
+    toolbox and master the optimization toolbox. It also made me familiar with
+    profile-driven optimization, which was a useful skill for the rest of my
+    PhD.
