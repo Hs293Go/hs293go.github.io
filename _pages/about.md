@@ -16,8 +16,11 @@ I specialize in:
 
 - Cooperative localization and observability-aware control [^1]
 - Mathematical measurement of system observability and uncertainty
-- Large-scale software design, ecosystem integration ROS 2, PX4, etc. and
-  hardware interfacing for autonomous systems
+- Large-scale software design, hardware interfacing, and flight testing for
+  autonomous systems.
+  - Strong ecosystem familiarity with ROS 2, PX4, etc., robotics libraries.
+  - Contributor to major FOSS robotics libraries including Eigen, Ceres, and
+    acados.
 
 Beyond research, I applied engineering skills to use in the **University of
 Toronto Autonomous Racing Team (UTADR)** for the Abu Dhabi Autonomous Racing
