@@ -77,4 +77,8 @@ positioning uncertainty, answering Trawny's open question affirmatively. This
 work was published at
 [ICRA 2024](https://doi.org/10.1109/ICRA57147.2024.10610823).
 
+| Simulated Team                                              | Optimized Trajectories                                           | Precision Improvement                                                           |
+| ----------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| ![CL simulation](../assets/images/multi_vehicle_gazebo.png) | ![optimized trajectories](../assets/images/uav_trajectories.png) | ![covariance improvement](../assets/images/state_estimation_performance_hl.png) |
+
 ## Observability-Aware Control
