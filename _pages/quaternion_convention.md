@@ -3,8 +3,6 @@ title: "Quaternions: A Common Convention"
 permalink: /quaternion_convention/
 ---
 
-# Quaternions: A Common Convention
-
 Quaternions are a ubiquitous tool in computer graphics and robotics for
 representing spatial rotations. However, there is a maddening array of different
 conventions: Entire papers [^1] are written on the tradeoffs of different
@@ -61,6 +59,15 @@ where $\mathbf{q}_{xyz}$ are the imaginary components, often treated as a
   x, y, z, w = rot.as_quat()
   ```
 
+  > Technically, `Rotation` is an opaque class that does not expose its
+  > underlying vector representation. However, inspecting:
+  >
+  > - `https://github.com/scipy/scipy/blob/main/scipy/spatial/transform/_rotation.py`
+  > - `https://github.com/scipy/scipy/blob/main/scipy/spatial/transform/_rotation_cy.pyx`
+  >
+  > reveals that the underlying vector representation of quaternions in SciPy is
+  > a 4-by-1 `self._quat` array in the **scalar-last**/`[x, y, z, w]` order.
+
 - C++ (Eigen)
 
   In Eigen, the `Quaternion` class can be constructed from a 4-vector, and it
@@ -92,6 +99,7 @@ where $\mathbf{q}_{xyz}$ are the imaginary components, often treated as a
 
   let vec = Vector4::new(x, y, z, w);
   let q = Quaternion::from_vector(vec);
+  let q = UnitQuaternion::from_quaternion(q);
   assert_eq!(q.coords, vec);
   ```
 
@@ -101,8 +109,8 @@ where $\mathbf{q}_{xyz}$ are the imaginary components, often treated as a
 ## Construction
 
 While construction of quaternions from 4-vectors is consistent across the 3
-languages and libraries, construction from individual components is much
-messier.
+languages and libraries, construction from individual components differs, and is
+the only exception to the common convention.
 
 - C++ (Eigen)
 
@@ -164,6 +172,22 @@ messier.
   rot = R.from_quat([w, x, y, z], scalar_first=True)
   x, y, z, w = rot.as_quat(scalar_first=True)
   ```
+
+### Recommendation
+
+To unify to a single mental model of **scalar-last** coefficent order, I
+recommend using the `FromCoeffsScalarLast` factory in Eigen, and simply avoid
+the `Quaternion::new` constructor in nalgebra. If the latter feels unergonomic,
+be aware that most of the time we will be using `UnitQuaternion`, so we can
+leverage `Quaternion`'s multitude of `into()` implementations and write:
+
+```rust
+use nalgebra::{UnitQuaternion, Vector4, vector};
+
+let q1 = UnitQuaternion::from_quaternion(Vector4::new(x1, y1, z1, w1).into());
+let q2 = UnitQuaternion::from_quaternion([x2, y2, z2, w2].into());
+let q3 = UnitQuaternion::from_quaternion(vector![x3, y3, z3, w3].into());
+```
 
 ## Multiplication
 
@@ -262,10 +286,9 @@ $$
   `UnitQuaternion` objects.
 
   ```rust
-  use nalgebra::{Vector4, Quaternion, UnitQuaternion};
+  use nalgebra::UnitQuaternion;
 
-  let q = Quaternion::from_vector(Vector4::new(x, y, z, w));
-  let q = UnitQuaternion::from_quaternion(q);
+  let q = UnitQuaternion::from_quaternion([x, y, z, w].into());
   let matrix = q.to_rotation_matrix();
   ```
 
@@ -328,8 +351,7 @@ $$
   ```rust
   use nalgebra::{Quaternion, UnitQuaternion, Vector3};
 
-  let q = Quaternion::from(Vector4::new(x, y, z, w));
-  let q = UnitQuaternion::from_quaternion(q);
+  let q = UnitQuaternion::from_quaternion([x, y, z, w].into());
   let v = Vector3::new(vx, vy, vz);
   let v_rotated = q.transform_vector(&v);
   ```
