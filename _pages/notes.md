@@ -19,6 +19,7 @@ to the original file or directory.
   ```
 
 - Zip
+
   ```bash
   zip -r backup{.zip,}
   ```
@@ -33,7 +34,7 @@ The following command can be easily copied to blanket-disable building tests,
 examples, benchmarks, and docs, accounting for some spelling variations:
 
 ```bash
-cmake -S . -B build -D BUILD_{TESTS,TESTING,EXAMPLES,BENCHMARKS,DOCS}
+cmake -S . -B build -DBUILD_{TESTS,TESTING,EXAMPLES,BENCHMARKS,DOCS}=OFF
 ```
 
 ## Running a GUI application in a Docker container
@@ -81,7 +82,7 @@ The covariance data is printed as a 36-element array in yaml list format (i.e.,
 one element per line). This swamps the terminal and obscures the usually more
 interesting position and velocity fields.
 
-### Attempted solutions:
+### Attempted solutions
 
 - `--field`: This option only allows printing a single field, so it cannot be
   used to print all fields except covariance.
@@ -89,7 +90,7 @@ interesting position and velocity fields.
 - `--filter`: This option only allows filtering messages based on field values,
   not dropping portions of the message.
 
-### Actual solution:
+### Actual solution
 
 Use `yq` to delete the covariance field from the message before printing it. For
 example, to dropping covariances from the `pose` and `twist` fields
