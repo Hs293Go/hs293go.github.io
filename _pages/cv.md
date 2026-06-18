@@ -3,7 +3,17 @@ title: "Curriculum Vitae"
 permalink: /cv/
 ---
 
-[Download PDF CV](/assets/cv.pdf)
+## If you want to know me generally
+
+[CV for readers without a technical background](https://raw.githubusercontent.com/Hs293Go/hs293go.github.io/refs/heads/main/assets/documents/helsongo-cv-generic-nontech.pdf)
+
+## If you want to know my research background
+
+[CV focusing on research experience](https://raw.githubusercontent.com/Hs293Go/hs293go.github.io/refs/heads/main/assets/documents/helsongo-cv-research-scientist.pdf)
+
+## If you want to know my engineering background
+
+[CV focusing on engineering experience](https://raw.githubusercontent.com/Hs293Go/hs293go.github.io/refs/heads/main/assets/documents/helsongo-cv-staff-software-engineer.pdf)
 
 ### Education
 
